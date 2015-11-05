@@ -57,7 +57,10 @@ class MultipleModelMixin(object):
         queryList = self.get_queryList()
 
         # Iterate through the queryList, run each queryset and serialize the data
-        results = []
+        if self.flat:
+            results = list()
+        else:
+            results = dict()
         for pair in queryList:
             # Run the queryset through Django Rest Framework filters
             queryset = self.filter_queryset(pair[0])
@@ -84,9 +87,9 @@ class MultipleModelMixin(object):
             # Otherwise, group the data by Model/Queryset
             else:
                 if label:
-                    data = { label: data }
-
-                results.append(data)
+                    results[label] = data
+                else:
+                    results['None'] = data
 
 
                 
