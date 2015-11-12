@@ -61,7 +61,7 @@ class MultipleModelMixin(object):
             results = list()
         else:
             results = dict()
-        for description, pair in queryList.iteritems():
+        for description, pair in queryList.iteritems() if isinstance(queryList, dict) else enumerate(queryList):
             # Run the queryset through Django Rest Framework filters
             queryset = self.filter_queryset(pair[0])
 
