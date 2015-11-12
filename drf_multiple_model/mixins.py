@@ -61,7 +61,7 @@ class MultipleModelMixin(object):
             results = list()
         else:
             results = dict()
-        for pair in queryList:
+        for description, pair in enumerate(queryList):
             # Run the queryset through Django Rest Framework filters
             queryset = self.filter_queryset(pair[0])
 
@@ -69,14 +69,17 @@ class MultipleModelMixin(object):
             data = pair[1](queryset,many=True).data
 
             # Get the label, unless add_model_type is note set
-            try:
-                label = pair[2]
-            except IndexError:
-                if self.add_model_type:
-                    label = queryset.model.__name__.lower() 
-                else:
-                    label = None
-
+            if isinstance(description, int):
+                try:
+                    label = pair[2]
+                except IndexError:
+                    if self.add_model_type:
+                        label = queryset.model.__name__.lower() 
+                    else:
+                        label = None
+            else:
+                label = description
+            
             # if flat=True, Organize the data in a flat manner
             if self.flat:
                 for datum in data:
