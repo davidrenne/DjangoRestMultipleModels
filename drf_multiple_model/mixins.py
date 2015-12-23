@@ -65,8 +65,12 @@ class MultipleModelMixin(object):
             # Run the queryset through Django Rest Framework filters
             queryset = self.filter_queryset(pair[0])
 
+            kwargs_serializer = {}
+            kwargs_serializer['many'] = True
+            kwargs_serializer['context'] = self.get_serializer_context()
+
             # Run the paired serializer
-            data = pair[1](queryset,many=True).data
+            data = pair[1](queryset, **kwargs_serializer).data
 
             # Get the label, unless add_model_type is note set
             if isinstance(description, int):
